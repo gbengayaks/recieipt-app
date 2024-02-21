@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, useFieldArray } from "react-hook-form";
-import {useNavigate} from "react-router-dom";
+import Editform from './Editform';
 
   const Receipts = () => {
-      const navigate = useNavigate();
+
+      const [submittedData, setSubmittedData] = useState(null);
 
       const {
         register,
         control,
         handleSubmit,
-        watch,
+        setValue,
         formState: { errors },
       } = useForm();
 
@@ -18,20 +19,31 @@ import {useNavigate} from "react-router-dom";
         control,
         rules: {
           required: "Please append at least one item"
-            }
-          });
+         }});
 
-      const onSubmitHandler = (data) => {
+      const onSubmit = (data) => {
         // Handle form submission, data will contain the uploaded image
-        const jsonData = JSON.stringify(data, null, 2);
+        setSubmittedData(data);
+         const newData = setSubmittedData;
+         console.log(newData);
+
+        // const jsonData = JSON.stringify(data, null, 2);
+        // console.log({'submit data': data});
         
         // Redirect to the display page
-        navigate('/preview', { state: {jsonData} });
+        // navigate('/preview', { state: {jsonData} });
+        //
+        //navigate('/edit', {state: {formData: data}})
+
+
       };
 
   return (
     <div> 
-        <form onSubmit={handleSubmit(onSubmitHandler)} >
+      {submittedData ? (
+        <Editform formData={submittedData} />
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} >
         <div className='container grid grid-cols-12'>
           <div className='m-2 col-span-12 md:col-span-10 border-1 border border-gray-600'>
               <div className='mx-auto p-5'>
@@ -40,12 +52,12 @@ import {useNavigate} from "react-router-dom";
                         <div className='mx-auto w-68 h-52 border-2 rounded-md bg-gray-400 md:w-60 md:h-40 md:mx-0'>
                           <label className='text-sm' htmlFor="file">+ Add Your Logo </label>
                           <input 
+                               {...register("picture", {
+                                required: "logo is required",
+                              })}
                               type="file" 
                               className='p-4'
-                              onChange={(e) => {
-                                const [file] = e.target.files;
-                                setPicture((picture) => [...picture, file]);
-                              }} 
+                             
                           />
                         </div>
                         
@@ -64,6 +76,7 @@ import {useNavigate} from "react-router-dom";
                                         <textarea {...register("billto", {
                                             required: "filed is required",
                                           })}
+                                          id='billto'
                                             type="text"  
                                             className='w-full pl-2 border border-1 border-gray-400 rounded md:w-48' 
                                             cols="20" />
@@ -75,7 +88,8 @@ import {useNavigate} from "react-router-dom";
                                         {...register("shipto", {
                                           required: "Field is required",
                                         })}
-                                          type="text"
+                                        id='shipto'
+                                        type="text"
                                         className='w-full pl-2 border border-1 border-gray-400 rounded md:w-48' cols="20" /> 
                                     </div>
                               </div> 
@@ -203,15 +217,15 @@ import {useNavigate} from "react-router-dom";
               <select className='w-full text-lg p-2 border border-gray-400 rounded my-3 md:w-44 md:text-sm' >
                 <option value="RECEIPT">Receipt</option>
               </select>
-            </div>
-           
-            <div className='flex justify-center'>
-              
+            </div> 
+            
+            <div className='flex justify-center'> 
               <button type='submit' className='text-sm text-white p-4 w-44 bg-green-700 rounded hover:bg-green-500 mt-2'>SUBMIT</button>
             </div>
           </div>
         </div>
-    </form>  
+      </form>
+      )}  
     </div>
     
   )

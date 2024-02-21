@@ -10,6 +10,7 @@ const Preview = () => {
           {jsonData && (
           <pre>{jsonData}</pre>
         )}
+       
     </div>
   )
 }

@@ -1,13 +1,16 @@
-import { createBrowserRouter, RouterProvider, useNavigate, Route, Link } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Route, Link } from "react-router-dom";
 import Receipts from "./components/Receipts";
 import Preview from "./components/Preview";
-
-//const navigate = useNavigate();
+import Editform from "./components/Editform";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Receipts />
+  },
+  {
+    path: "/edit",
+    element: <Editform />
   },
   {
     path: "/preview",
