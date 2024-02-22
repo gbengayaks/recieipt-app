@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import Editform from "./Editform";
 
 const Receipts = () => {
   const [logo, setLogo] = useState(null);
+  const fileInputRef = useRef(null);
 
   const [submittedData, setSubmittedData] = useState(null);
 
@@ -39,12 +40,20 @@ const Receipts = () => {
 
     // Function to handle file input change
   };
+
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
       // Update the logo state with the selected file
       setLogo(URL.createObjectURL(selectedFile));
     }
+  };
+
+  // Function to clear the logo
+  const voidSelect = () => {
+    setLogo(null);
+    // Reset the file input field
+    fileInputRef.current.value = null;
   };
 
   return (
@@ -61,11 +70,21 @@ const Receipts = () => {
                     <div className="mx-auto w-68 h-52 border-2 rounded-md bg-gray-400 md:w-60 md:h-40 md:mx-0">
                       {/* Display the selected image if available, otherwise display the label */}
                       {logo ? (
-                        <img
-                          src={logo}
-                          alt="Selected Logo"
-                          className="w-full h-full object-cover rounded-md"
-                        />
+                        <>
+                          <img
+                            src={logo}
+                            alt="Selected Logo"
+                            className="w-full h-full object-cover rounded-md"
+                          />
+                          <div className="flex justify-center items-center">
+                            <button
+                              onClick={voidSelect}
+                              className="bg-red-600 text-white py-1 px-2 mb-8 rounded"
+                            >
+                              Clear Logo
+                            </button>
+                          </div>
+                        </>
                       ) : (
                         <label className="text-sm" htmlFor="file">
                           + Add Your Logo
@@ -78,6 +97,7 @@ const Receipts = () => {
                         id="file"
                         accept="image/*" // Accept only image files
                         className="hidden" // Hide the input field
+                        ref={fileInputRef} // Assign the ref to the file input field
                       />
                     </div>
 
