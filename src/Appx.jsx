@@ -1,35 +1,35 @@
-import { useForm } from "react-hook-form"
+import React, { useState } from 'react';
+import Receipt1 from "./components/Receipt1";
+import Preview from "./components/Preview";
 
+const App = () => {
+  const [formData, setFormData] = useState(null);
 
-export default function App() {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm()
+  const onSubmit = (data) => {
+    setFormData(data);
 
+    // const jsonData = JSON.stringify(data, null, 2);
+    // console.log({'submit data': data});
+  
+  // Redirect to the display page
+   //navigate('/preview', { state: {jsonData} });
 
-  const onSubmit = (data) => console.log(data)
-
-
-  console.log(watch("example")) // watch input value by passing the name of it
-
+  //navigate('/edit', {state: {formData: data}})
+  };
 
   return (
-    /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {/* register your input into the hook by invoking the "register" function */}
-      <input defaultValue="test" {...register("example")} />
+    <div>
+      {/* <Receipt1 onSubmit={onSubmit} />
+      {formData && <Preview data={formData} />} */}
 
+       {formData ? (
+       <Preview data={formData} />
+      ) : (
+        <Receipt1 onSubmit={onSubmit} />
+      )}
+      
+    </div>
+  );
+};
 
-      {/* include validation with required or other standard HTML validation rules */}
-      <input defaultValue="Surname" {...register("exampleRequired", { required: true })} />
-      {/* errors will return when field validation fails  */}
-      {errors.exampleRequired && <span>This field is required</span>}
-
-
-      <input type="submit" />
-    </form>
-  )
-}
+export default App;

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useForm, useFieldArray } from "react-hook-form";
-import { useNavigate }  from "react-router-dom";
+//import { useNavigate }  from "react-router-dom";
 
-const navigate = useNavigate;
+const Receipt1 = ({ onSubmit }) => {
 
-const Receipt1 = () => {
+  // const navigate = useNavigate;
 
   const {
     register,
@@ -37,27 +37,10 @@ const Receipt1 = () => {
     }
   });
 
-  const onSubmit = (data) => {
-    // Handle form submission, data will contain the uploaded image
-
-    // setSubmittedData(data);
-    //  const newData = setSubmittedData;
-    //  console.log(newData);
-
-    const jsonData = JSON.stringify(data, null, 2);
-      console.log({'submit data': data});
-    
-    // Redirect to the display page
-     navigate('/preview', { state: {jsonData} });
-
-    //navigate('/edit', {state: {formData: data}})
-  };
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-          {fields.map((field, index) => {
-            return (             
+      <form onSubmit={handleSubmit(onSubmit)}>            
         <div className='container grid grid-cols-12'>
           <div className='m-2 col-span-12 md:col-span-10 border-1 border border-gray-600'>
                 <div className='mx-auto p-5'>
@@ -74,16 +57,16 @@ const Receipt1 = () => {
                         </div>
                         
                           <div className='mt-10 flex flex-col gap-y-3'>
-                              <textarea {...register(`cart.${index}.whofrom`)} className='w-full text-sm p-2 border border-1 border-gray-400 rounded md:w-64' placeholder='Who is this invoice from? (required)' cols="20" />
+                              <textarea {...register("whofrom")} className='w-full text-sm p-2 border border-1 border-gray-400 rounded md:w-64' placeholder='Who is this invoice from? (required)' cols="20" />
                               <div className='md:flex gap-4 mt-2'>
                                   <div className='mb-2 md:grid gap-y-3'>
                                     <label htmlFor="billto">Bill to</label>
-                                        <textarea {...register(`cart.${index}.billto`)} className='w-full pl-2 border border-1 border-gray-400 rounded md:w-48' cols="20" />
+                                        <textarea {...register("billto")} className='w-full pl-2 border border-1 border-gray-400 rounded md:w-48' cols="20" />
                                   </div>
 
                                   <div className='mb-2 md:grid gap-y-3'>
                                     <label htmlFor="shipto">Ship to</label>
-                                        <textarea {...register(`cart.${index}.shipto`)} className='w-full pl-2 border border-1 border-gray-400 rounded md:w-48' cols="20" /> 
+                                        <textarea {...register("shipto")} className='w-full pl-2 border border-1 border-gray-400 rounded md:w-48' cols="20" /> 
                                     </div>
                               </div> 
                           </div>
@@ -96,19 +79,19 @@ const Receipt1 = () => {
                           <div className='grid justify-items-end gap-y-3 mb-3'>
                               <div className='flex gap-2'>
                                   <label className='text-sm' htmlFor="">Date</label>
-                                  <input {...register(`cart.${index}.ddate`)} type="date" className='w-72 text-sm p-2 rounded-sm md:w-44 border-1 border border-gray-400' placeholder='mm/dd/yyy' />
+                                  <input {...register("ddate")} type="date" className='w-72 text-sm p-2 rounded-sm md:w-44 border-1 border border-gray-400' placeholder='mm/dd/yyy' />
                               </div>
                               <div className='md:flex gap-2'>
                                   <label className='text-sm' htmlFor="">Payment Terms</label>
-                                  <input {...register(`cart.${index}.paymentterms`)} type="text" className='w-72 p-2 rounded-sm md:w-44 border-1 border border-gray-400'/>
+                                  <input {...register("paymentterms")} type="text" className='w-72 p-2 rounded-sm md:w-44 border-1 border border-gray-400'/>
                               </div>
                               <div className='flex gap-2 '>
                                   <label className='text-sm' htmlFor="">Due Date</label>
-                                  <input {...register(`cart.${index}.duedate`)} type="date" className='w-72 text-sm p-2 rounded-sm md:w-44 border-1 border border-gray-400' placeholder='mm/dd/yyy' />
+                                  <input {...register("duedate")} type="date" className='w-72 text-sm p-2 rounded-sm md:w-44 border-1 border border-gray-400' placeholder='mm/dd/yyy' />
                               </div>
                               <div className='flex gap-2'>
                                   <label className='text-sm' htmlFor="">PO Number</label>
-                                  <input {...register(`cart.${index}.ponumber`)} type="text" className='w-72 p-2 rounded-sm md:w-44 border-1 border border-gray-400' />
+                                  <input {...register("ponumber")} type="text" className='w-72 p-2 rounded-sm md:w-44 border-1 border border-gray-400' />
                               </div>
                           </div>      
                       </div>
@@ -125,7 +108,9 @@ const Receipt1 = () => {
                             <li className='px-2'>Delete</li>
                         </div> 
                     </ul>
-                        <div className='key={id} md:flex gap-4 px-4'>
+                    {fields.map((field, index) => {
+                    return ( 
+                        <div className='md:flex gap-4 px-4' key={field.id}>
                           <input {...register(`cart.${index}.description`)} className='w-full p-2 md:p-2 mt-4 md:w-full border border-1 border-gray-600' type="text" />
                           <input {...register(`cart.${index}.quantity`)} className='w-16 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded' type="number" />
                             <span id='currency' className='px-2 md:mt-5 md:px-1'>$</span>
@@ -133,8 +118,9 @@ const Receipt1 = () => {
                             <span id='currency' className='px-2 md:mt-5 md:px-1'>$</span>
                             <input {...register(`cart.${index}.amount`)} className='w-20 p-2 mr-3 md:mt-4' placeholder='0.00' type="number" />
                             <button className='text-white bg-red-800 p-2 mt-4' type='button' onClick={() => remove(index)}>X</button>
-                        </div>
-                       
+                        </div>)
+                        })}
+
                         <div className='rounded-md my-3'>
                           <button type='button' onClick={() => append({
                             description: 'Description of service and product . . . .',
@@ -149,11 +135,11 @@ const Receipt1 = () => {
                      <div>
                     <label htmlFor="notes">Notes</label>
                     <div className='my-2'>
-                      <textarea {...register(`cart.${index}.notess`)} className='w-full border border-1 border-gray-400 rounded-sm text-xs p-1 md:w-80' cols="20" rows="3" placeholder='Notes - any relevant information not already covered' />
+                      <textarea {...register("notess")} className='w-full border border-1 border-gray-400 rounded-sm text-xs p-1 md:w-80' cols="20" rows="3" placeholder='Notes - any relevant information not already covered' />
                     </div>
                     <label htmlFor="terms">Terms</label>
                     <div className='mt-2'>
-                      <textarea {...register(`cart.${index}.termss`)} className='w-full border border-1 border-gray-400 rounded-sm text-xs p-1 md:w-80' cols="30" rows="3"  placeholder='terms and conditions - late fees, payment method, delivery schedule' />
+                      <textarea {...register("termss")} className='w-full border border-1 border-gray-400 rounded-sm text-xs p-1 md:w-80' cols="30" rows="3"  placeholder='terms and conditions - late fees, payment method, delivery schedule' />
                     </div>
                   </div>
                 </div>
@@ -162,14 +148,14 @@ const Receipt1 = () => {
           <div className='col-span-12 md:col-span-2 m-2'>
             <p className='text-sm'>Select Currency: </p>
             <div>
-              <select {...register(`cart.${index}.currency`)} className='w-full text-xs p-2 border border-gray-400 rounded my-3 md:w-44' >
+              <select {...register("currency")} className='w-full text-xs p-2 border border-gray-400 rounded my-3 md:w-44' >
                 <option value="$">United States Dollar</option>
                 <option value="N">Nigeria Naira</option>
               </select>
             </div>
             <p className='text-sm'>Select Type: </p>
             <div>
-              <select {...register(`cart.${index}.stype`)} className='w-full text-xs p-2 border border-gray-400 rounded my-3 md:w-44' >
+              <select {...register("stype")} className='w-full text-xs p-2 border border-gray-400 rounded my-3 md:w-44' >
                 <option value="RECEIPT">Receipt</option>
               </select>
             </div>
@@ -180,8 +166,6 @@ const Receipt1 = () => {
             </div>
           </div>
         </div>
-         )
-        })}
       </form>  
     </div>
     
