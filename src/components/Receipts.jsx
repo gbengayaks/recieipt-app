@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import Editform from "./Editform";
+import FinalReceipt from "./FinalReceipt";
 
 const Receipts = () => {
   const [logo, setLogo] = useState(null);
@@ -14,7 +14,12 @@ const Receipts = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      receiptt: "RECEIPT",
+      tagg: "#",
+    }
+  });
 
   const { fields, append, remove } = useFieldArray({
     name: "cart",
@@ -23,6 +28,12 @@ const Receipts = () => {
       required: "Please append at least one item",
     },
   });
+
+  const calculateProduct = (index) => {
+    const quantity = fields[index]?.quantity || 0;
+    const rate = fields[index]?.rate || 0;
+    return quantity * rate;
+  };
 
   const onSubmit = (data) => {
     // Handle form submission, data will contain the uploaded image
@@ -59,7 +70,7 @@ const Receipts = () => {
   return (
     <div>
       {submittedData ? (
-        <Editform formData={submittedData} />
+        <FinalReceipt formData={submittedData} />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="container grid grid-cols-12">
@@ -85,20 +96,24 @@ const Receipts = () => {
                             </button>
                           </div>
                         </>
-                      ) : (
-                        <label className="text-sm" htmlFor="file">
-                          + Add Your Logo
-                        </label>
+                          ) : (
+                        <div>
+                          <input
+                              {...register("file")}
+                              onChange={handleFileChange} // Call handleFileChange on file selection
+                              type="file"
+                              id="file"
+                              accept="image/*" // Accept only image files
+                              className="invisible pb-7 pr-24" // Hide the input field
+                              ref={fileInputRef} // Assign the ref to the file input field
+                            
+                            />
+                          <label className="text-lg p-8 md:" htmlFor="file">
+                            + Add Your Logo
+                          </label>
+                      </div>
                       )}
-                      {/* Input field for selecting file */}
-                      <input
-                        onChange={handleFileChange} // Call handleFileChange on file selection
-                        type="file"
-                        id="file"
-                        accept="image/*" // Accept only image files
-                        className="hidden" // Hide the input field
-                        ref={fileInputRef} // Assign the ref to the file input field
-                      />
+                      {/* Input field for selecting file */} 
                     </div>
 
                     <div className="mt-10 flex flex-col gap-y-3">
@@ -143,20 +158,22 @@ const Receipts = () => {
                   <div className="grid justify-items-end">
                     <div className="flex flex-col justify-end gap-y-2 mb-4">
                       <input
+                        {...register("receiptt")}
                         type="text"
                         className="w-full md:w-96 text-xl font-semibold text-end rounded p-2 border-1 border border-gray-400"
-                        placeholder="Receipt"
+                        
                       />
                       <div className="flex justify-end">
-                        <label
-                          className="w-8 p-1 bg-gray-300 rounded-l-sm border-1 border border-gray-400"
-                          htmlFor=""
-                        >
-                          #
-                        </label>
                         <input
+                          {...register("tagg")}
+                          className="w-8 p-1 bg-gray-100 rounded-l-sm border-1 border border-gray-400"
+                          readOnly
+                        />
+                        <input
+                          {...register("receiptno")}
                           type="text"
                           className="w-32 p-1 rounded-r-sm border-1 border border-gray-400"
+                          placeholder="receipt no"
                         />
                       </div>
                     </div>
@@ -231,9 +248,11 @@ const Receipts = () => {
                           {...register(`cart.${index}.description`)}
                           className="w-full p-2 md:p-2 mt-4 md:w-full border border-1 border-gray-600"
                           type="text"
+                          placeholder="Description of service and product . . . ."
                         />
                         <input
                           {...register(`cart.${index}.quantity`)}
+                          defaultValue={field.quantity}
                           className="w-16 p-2 md:p-2 mt-4 border border-1 border-gray-600 rounded"
                           type="number"
                         />
@@ -242,6 +261,7 @@ const Receipts = () => {
                         </span>
                         <input
                           {...register(`cart.${index}.rate`)}
+                          defaultValue={field.rate}
                           className="w-20 p-2 md:mt-4 border border-1 border-gray-600 rounded"
                           type="number"
                         />
@@ -251,7 +271,8 @@ const Receipts = () => {
                         <input
                           {...register(`cart.${index}.amount`)}
                           className="w-20 p-2 mr-3 md:mt-4"
-                          type="text"
+                          value={calculateProduct(index)}
+                          type="number"
                         />
                         <button
                           type="button"
@@ -269,8 +290,7 @@ const Receipts = () => {
                       className="text-white rounded text-xs border bg-blue-600 p-2 px-3 hover:bg-blue-400"
                       onClick={() =>
                         append({
-                          description:
-                            "Description of service and product . . . .",
+                          description:"",
                           quantity: 1,
                           rate: 0.0,
                           amount: 0.0,

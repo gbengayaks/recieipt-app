@@ -1,12 +1,12 @@
 import React from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm} from 'react-hook-form';
 
 const Editform = ({ formData }) => {
     console.log('new data:', formData);
    
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, setValue } = useForm({
          defaultValues: { // Set default values for form fields
-            picture: formData.picture,
+            picture: formData.file,
              shipto: formData.shipto,
              whofrom: formData.whofrom,
              billto: formData.billto,
@@ -18,21 +18,7 @@ const Editform = ({ formData }) => {
              terms: formData.terms,
          }
       });
-
-    //   const {fields, append, remove} = useFieldArray({
-    //     control,
-    //     name: "cart",
-    //     });
-
-    
-      const onSubmit = (data) => {
-        // You can perform any validation or additional processing here
-        // After editing, you may want to save the changes or navigate to another page
-    
-        // Navigate back to the FormComponent after editing
-        //navigate('/');
-      };
-
+      
   return (
     <div>     
         <div className='container grid grid-cols-12'>
@@ -42,9 +28,9 @@ const Editform = ({ formData }) => {
                         <div className='flex flex-col md:flex-row justify-between'>
                            <div>
                                 <div className='my-5'>
-                                    { formData.picture && ( 
+                                    { formData.file && ( 
                                     <div className='mx-auto w-60 h-60 border-2 rounded-md bg-gray-200 md:w-60 md:h-60 md:mx-0'>
-                                            <img className='object-cover h-60 w-60' src={URL.createObjectURL(formData.picture[0])} alt="Uploaded file" />
+                                        <img className='object-cover h-60 w-60' src={URL.createObjectURL(formData.file[0])} alt="Uploaded file" />
                                     </div> 
                                     )}
                                 </div>
@@ -127,13 +113,7 @@ const Editform = ({ formData }) => {
                                 </div>      
                             </div>
                         </div> 
-                            {/* <ul>
-                                {formData.cart.map((item, index) => (
-                                <li key={index}>
-                                    Description: {item.description}, Quantity: {item.quantity}, Rate: {item.rate}, Amount: {item.amount}
-                                </li>
-                                ))}
-                            </ul> */}
+                    
                         <div className='my-5'>
                             <ul className='bg-blue-600 text-white p-2 rounded-md flex justify-between'>
                                 <div className='flex justify-start pl-5'>
