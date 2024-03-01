@@ -70,7 +70,7 @@ const Receipts = () => {
   return (
     <div>
       {submittedData ? (
-        <FinalReceipt formData={submittedData} />
+        <FinalReceipt formData={submittedData} logo={logo} />
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="container grid grid-cols-12">
@@ -257,7 +257,7 @@ const Receipts = () => {
                           type="number"
                         />
                         <span id="currency" className="px-2 md:mt-5 md:px-1">
-                          $
+                          ₦
                         </span>
                         <input
                           {...register(`cart.${index}.rate`)}
@@ -266,7 +266,7 @@ const Receipts = () => {
                           type="number"
                         />
                         <span id="currency" className="px-2 md:mt-5 md:px-1">
-                          $
+                        ₦
                         </span>
                         <input
                           {...register(`cart.${index}.amount`)}
