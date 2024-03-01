@@ -1,21 +1,25 @@
 import { createBrowserRouter, RouterProvider, Route, Link } from "react-router-dom";
 import Receipts from "./components/Receipts";
 import Preview from "./components/Preview";
-import Editform from "./components/Editform";
+import FinalReceipt from "./components/FinalReceipt";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Receipts />
   },
-  {
-    path: "/edit",
-    element: <Editform />
-  },
-  {
-    path: "/preview",
-    element: <Preview />
-  }
+  // {
+  //   path: "/edit",
+  //   element: <Editform />
+  // },
+  // {
+  //   path: "/preview",
+  //   element: <Preview />
+  // },
+  // {
+  //   path: "/final",
+  //   element: <FinalReceipt />
+  // }
 ]);
 
 function App() {
